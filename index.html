@@ -502,6 +502,13 @@
     color: var(--gray);
   }
   .btn-outline:hover { border-color: var(--maize); color: var(--maize); }
+  .btn-danger {
+    background: transparent;
+    border: 1px solid rgba(231,76,60,0.4);
+    color: #e74c3c;
+    font-size: 11px;
+  }
+  .btn-danger:hover { background: rgba(231,76,60,0.1); }
   .save-status {
     font-size: 11px;
     color: var(--green);
@@ -510,6 +517,70 @@
     transition: opacity 0.3s;
   }
   .save-status.show { opacity: 1; }
+
+  /* READ-ONLY MODE */
+  .readonly-notice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    background: rgba(255,203,5,0.07);
+    border: 1px solid rgba(255,203,5,0.2);
+    border-radius: 6px;
+    padding: 10px 16px;
+  }
+  .readonly-notice span { font-size: 12px; color: var(--text-light); letter-spacing: 0.5px; }
+  .readonly-notice .lock-icon { font-size: 16px; }
+  .admin-link {
+    margin-left: auto;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(255,255,255,0.15);
+    padding-bottom: 1px;
+  }
+  .admin-link:hover { color: var(--maize); }
+
+  /* ADMIN MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,15,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--navy-mid);
+    border: 2px solid var(--maize);
+    border-radius: 10px;
+    padding: 32px;
+    width: 320px;
+    text-align: center;
+  }
+  .modal h3 { font-family: 'Oswald', sans-serif; font-size: 18px; letter-spacing: 2px; color: var(--maize); margin-bottom: 8px; }
+  .modal p { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
+  .modal input[type=password] {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 5px;
+    color: var(--white);
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    letter-spacing: 4px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 16px;
+    outline: none;
+  }
+  .modal input[type=password]:focus { border-color: var(--maize); }
+  .modal-btns { display: flex; gap: 10px; justify-content: center; }
+  .modal-error { font-size: 12px; color: #e74c3c; margin-top: -8px; margin-bottom: 10px; min-height: 16px; }
 
   /* PRINT */
   @media print {
@@ -566,11 +637,35 @@
 
     <!-- RIGHT: SCORECARD -->
     <div>
-      <div class="controls">
+      <!-- READ-ONLY NOTICE (public) -->
+      <div class="readonly-notice" id="readonlyNotice">
+        <span class="lock-icon">🔒</span>
+        <span>Live Scorecard &mdash; View Only &nbsp;&middot;&nbsp; Updated by Garcia Market HQ</span>
+        <span class="admin-link" onclick="openAdminModal()">Admin</span>
+      </div>
+
+      <!-- ADMIN CONTROLS (hidden until unlocked) -->
+      <div class="controls" id="adminControls" style="display:none;">
         <button class="btn btn-primary" onclick="saveData()">💾 Save Scores</button>
-        <button class="btn btn-outline" onclick="clearAll()">Clear All</button>
         <button class="btn btn-outline" onclick="window.print()">🖨 Print</button>
-        <span class="save-status" id="saveStatus">✓ Saved</span>
+        <button class="btn btn-danger" onclick="clearAll()">&#x1F5D1; Clear All</button>
+        <span class="save-status" id="saveStatus">&#x2713; Saved</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--gray);cursor:pointer;" onclick="lockAdmin()">&#x1F512; Lock</span>
+      </div>
+
+      <!-- ADMIN UNLOCK MODAL -->
+      <div class="modal-overlay" id="adminModal">
+        <div class="modal">
+          <h3>ADMIN ACCESS</h3>
+          <p>Enter the Garcia Market admin PIN to edit scores.</p>
+          <input type="password" id="adminPin" maxlength="10" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;"
+            onkeydown="if(event.key==='Enter') checkPin()">
+          <div class="modal-error" id="pinError"></div>
+          <div class="modal-btns">
+            <button class="btn btn-primary" onclick="checkPin()">Unlock</button>
+            <button class="btn btn-outline" onclick="closeAdminModal()">Cancel</button>
+          </div>
+        </div>
       </div>
       <div class="scorecard-wrap">
         <table class="scorecard-table" id="scorecardTable"></table>
@@ -596,15 +691,16 @@ const WEEKS = [
   },
   {
     id: 'W2', label: 'W2 — GUEST COUNT', title: 'Guest Count Push',
-    max: 6,
-    desc: 'Biggest GC improvement vs. prior year or period. All positive improvement earns. Bonus point if PMIX item increases 15% from previous week (item disclosed Wed June 6th).',
+    max: 8,
+    desc: 'Biggest GC improvement vs. prior year or period. All positive improvement earns. <strong style="color:var(--maize)">🍖 PMIX Item: RIBS.</strong> Goal: increase Ribs PMIX by 15% from your W1 total. Ed will be making Fall off the Bone Ribs at Alley Rally.',
     rules: [
-      { pts: '5 pts', desc: '5%+ improvement' },
-      { pts: '4 pts', desc: '4% improvement' },
-      { pts: '3 pts', desc: '3% improvement' },
-      { pts: '2 pts', desc: '2% improvement' },
-      { pts: '1 pt', desc: '1% improvement or any positive' },
-      { pts: '+1 bonus', desc: 'PMIX item up 15% from prior week' },
+      { pts: '5 pts', desc: '5%+ GC improvement vs. prior year or period' },
+      { pts: '4 pts', desc: '4% GC improvement' },
+      { pts: '3 pts', desc: '3% GC improvement' },
+      { pts: '2 pts', desc: '2% GC improvement' },
+      { pts: '1 pt', desc: '1% GC improvement — or any positive' },
+      { pts: '+1 bonus', desc: '🍖 Ribs PMIX increases 15% vs. your W1 Ribs total' },
+      { pts: '+1 bonus', desc: '📊 Submit daily + weekly Rib Yield report' },
     ]
   },
   {
@@ -909,6 +1005,50 @@ function setWeek(i) {
   updateWeekSummary();
 }
 
+// ── ADMIN PIN LOGIC ───────────────────────────────────────────────────────
+const ADMIN_PIN = 'GRIT26'; // Change this to your preferred PIN
+let isAdmin = false;
+
+function openAdminModal() {
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminPin').value = '';
+  document.getElementById('pinError').textContent = '';
+  setTimeout(() => document.getElementById('adminPin').focus(), 100);
+}
+
+function closeAdminModal() {
+  document.getElementById('adminModal').classList.remove('open');
+}
+
+function checkPin() {
+  const entered = document.getElementById('adminPin').value.trim().toUpperCase();
+  if (entered === ADMIN_PIN) {
+    isAdmin = true;
+    closeAdminModal();
+    document.getElementById('readonlyNotice').style.display = 'none';
+    document.getElementById('adminControls').style.display = 'flex';
+    setInputsEditable(true);
+  } else {
+    document.getElementById('pinError').textContent = 'Incorrect PIN — try again.';
+    document.getElementById('adminPin').value = '';
+    document.getElementById('adminPin').focus();
+  }
+}
+
+function lockAdmin() {
+  isAdmin = false;
+  document.getElementById('readonlyNotice').style.display = 'flex';
+  document.getElementById('adminControls').style.display = 'none';
+  setInputsEditable(false);
+}
+
+function setInputsEditable(editable) {
+  document.querySelectorAll('.score-input').forEach(inp => {
+    inp.disabled = !editable;
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
 function init() {
   loadData();
   buildWeekNav();
@@ -916,6 +1056,8 @@ function init() {
   buildTable();
   updateLeaderboard();
   updateWeekSummary();
+  // Start in read-only mode — inputs disabled until admin unlocks
+  setInputsEditable(false);
 }
 
 init();
