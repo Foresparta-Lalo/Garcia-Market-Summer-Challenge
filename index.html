@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRIT — Rockin' GRIT Summer AA Contest Scorecard</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --maize: #FFCB05;
+    --navy: #00274C;
+    --navy-mid: #003566;
+    --navy-light: #1a4a72;
+    --gold-dark: #c9a003;
+    --white: #FFFFFF;
+    --off-white: #f0f4f8;
+    --gray: #8a9bb0;
+    --light-gray: #dde5ef;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --text-light: #c8d8e8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--navy);
+    font-family: 'Source Sans 3', sans-serif;
+    color: var(--white);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #001830 0%, var(--navy) 50%, #001a35 100%);
+    border-bottom: 3px solid var(--maize);
+    padding: 28px 32px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,203,5,0.12) 0%, transparent 70%);
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .grit-badge {
+    background: var(--maize);
+    color: var(--navy);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 3px;
+    padding: 8px 14px;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .title-block h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .title-block h1 span { color: var(--maize); }
+  .title-block p {
+    font-size: 12px;
+    color: var(--gray);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .header-meta {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .meta-pill {
+    background: rgba(255,203,5,0.1);
+    border: 1px solid rgba(255,203,5,0.3);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--maize);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* PRIZES BAR */
+  .prizes-bar {
+    background: linear-gradient(90deg, var(--gold-dark), var(--maize), var(--gold-dark));
+    padding: 10px 32px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .prize-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    color: var(--navy);
+    letter-spacing: 1px;
+  }
+  .prize-rank {
+    background: var(--navy);
+    color: var(--maize);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 20px 40px;
+  }
+
+  /* WEEK TABS */
+  .week-nav {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 24px;
+    scrollbar-width: none;
+  }
+  .week-nav::-webkit-scrollbar { display: none; }
+  .week-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--gray);
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 8px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    border-radius: 4px;
+  }
+  .week-btn:hover { background: rgba(255,203,5,0.1); color: var(--maize); border-color: rgba(255,203,5,0.3); }
+  .week-btn.active { background: var(--maize); color: var(--navy); border-color: var(--maize); font-weight: 700; }
+  .week-btn.has-data::after { content: '●'; font-size: 6px; margin-left: 4px; vertical-align: middle; color: var(--green); }
+  .week-btn.active.has-data::after { color: var(--navy); }
+
+  /* TWO-COLUMN LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* WEEK DETAIL PANEL */
+  .week-panel {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .week-panel-header {
+    background: var(--maize);
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .week-panel-header .wk-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--navy);
+    opacity: 0.7;
+  }
+  .week-panel-header .wk-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.1;
+    margin-top: 2px;
+  }
+  .week-panel-header .wk-max {
+    background: var(--navy);
+    color: var(--maize);
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+  .week-desc {
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .week-scoring {
+    padding: 14px 18px;
+  }
+  .scoring-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--maize);
+    margin-bottom: 10px;
+  }
+  .score-rule {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 7px;
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.4;
+  }
+  .score-rule .pts {
+    background: rgba(255,203,5,0.15);
+    color: var(--maize);
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    margin-top: 1px;
+  }
+
+  /* SCORECARD TABLE */
+  .scorecard-wrap {
+    overflow-x: auto;
+  }
+  .scorecard-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+    min-width: 720px;
+  }
+  .scorecard-table thead tr th {
+    background: var(--navy-mid);
+    padding: 10px 10px;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--maize);
+    border-bottom: 2px solid var(--maize);
+    white-space: nowrap;
+  }
+  .scorecard-table thead tr th:first-child { text-align: left; padding-left: 16px; min-width: 170px; }
+  .scorecard-table thead tr th.rank-col { min-width: 42px; }
+  .scorecard-table thead tr th.total-col {
+    background: rgba(255,203,5,0.15);
+    color: var(--maize);
+    font-size: 13px;
+    min-width: 60px;
+  }
+
+  .scorecard-table tbody tr {
+    transition: background 0.15s;
+  }
+  .scorecard-table tbody tr:hover { background: rgba(255,255,255,0.04); }
+  .scorecard-table tbody tr.rank-1 { background: rgba(255,203,5,0.08); }
+  .scorecard-table tbody tr.rank-2 { background: rgba(200,160,0,0.05); }
+  .scorecard-table tbody tr.rank-3 { background: rgba(160,120,0,0.04); }
+
+  .scorecard-table tbody td {
+    padding: 10px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+    vertical-align: middle;
+  }
+  .scorecard-table tbody td:first-child {
+    text-align: left;
+    padding-left: 16px;
+  }
+  .store-name {
+    font-weight: 600;
+    color: var(--white);
+    font-size: 13px;
+  }
+  .store-sub {
+    font-size: 10px;
+    color: var(--gray);
+    letter-spacing: 0.5px;
+  }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .rank-badge.r1 { background: var(--maize); color: var(--navy); }
+  .rank-badge.r2 { background: #b8c0cc; color: #1a1a1a; }
+  .rank-badge.r3 { background: #cd7f32; color: #1a1a1a; }
+  .rank-badge.other { background: rgba(255,255,255,0.08); color: var(--gray); }
+
+  .score-cell {
+    position: relative;
+  }
+  .score-input {
+    width: 44px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    color: var(--white);
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    padding: 5px 4px;
+    transition: all 0.2s;
+    -moz-appearance: textfield;
+    cursor: pointer;
+  }
+  .score-input::-webkit-outer-spin-button,
+  .score-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .score-input:hover { border-color: rgba(255,203,5,0.4); background: rgba(255,203,5,0.06); }
+  .score-input:focus { outline: none; border-color: var(--maize); background: rgba(255,203,5,0.1); color: var(--maize); }
+  .score-input.active-week { border-color: rgba(255,203,5,0.5); background: rgba(255,203,5,0.08); }
+  .score-input[disabled] {
+    opacity: 0.25;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .total-cell {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--maize);
+    background: rgba(255,203,5,0.05);
+    border-left: 2px solid rgba(255,203,5,0.2);
+  }
+
+  /* LEADERBOARD BAR */
+  .leaderboard {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .lb-header {
+    background: var(--navy-mid);
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .lb-header span {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--maize);
+  }
+  .lb-rows { padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lb-store {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--white);
+    width: 130px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lb-bar-wrap {
+    flex: 1;
+    height: 18px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .lb-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    display: flex;
+    align-items: center;
+    padding-left: 6px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--navy);
+    min-width: 28px;
+  }
+  .lb-total {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--maize);
+    width: 32px;
+    text-align: right;
+  }
+
+  /* WEEK POINT SUMMARY */
+  .week-summary {
+    margin-top: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .ws-header {
+    background: var(--navy-mid);
+    padding: 10px 16px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--maize);
+  }
+  .ws-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    padding: 1px;
+  }
+  .ws-cell {
+    background: var(--navy);
+    padding: 8px 4px;
+    text-align: center;
+  }
+  .ws-cell .wk {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--gray);
+    display: block;
+  }
+  .ws-cell .pts-sum {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-light);
+  }
+  .ws-cell.active-wk .wk { color: var(--maize); }
+  .ws-cell.active-wk .pts-sum { color: var(--maize); }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--maize); color: var(--navy); }
+  .btn-primary:hover { background: var(--gold-dark); color: var(--white); }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--gray);
+  }
+  .btn-outline:hover { border-color: var(--maize); color: var(--maize); }
+  .btn-danger {
+    background: transparent;
+    border: 1px solid rgba(231,76,60,0.4);
+    color: #e74c3c;
+    font-size: 11px;
+  }
+  .btn-danger:hover { background: rgba(231,76,60,0.1); }
+  .save-status {
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-status.show { opacity: 1; }
+
+  /* READ-ONLY MODE */
+  .readonly-notice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    background: rgba(255,203,5,0.07);
+    border: 1px solid rgba(255,203,5,0.2);
+    border-radius: 6px;
+    padding: 10px 16px;
+  }
+  .readonly-notice span { font-size: 12px; color: var(--text-light); letter-spacing: 0.5px; }
+  .readonly-notice .lock-icon { font-size: 16px; }
+  .admin-link {
+    margin-left: auto;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--gray);
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(255,255,255,0.15);
+    padding-bottom: 1px;
+  }
+  .admin-link:hover { color: var(--maize); }
+
+  /* ADMIN MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,15,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--navy-mid);
+    border: 2px solid var(--maize);
+    border-radius: 10px;
+    padding: 32px;
+    width: 320px;
+    text-align: center;
+  }
+  .modal h3 { font-family: 'Oswald', sans-serif; font-size: 18px; letter-spacing: 2px; color: var(--maize); margin-bottom: 8px; }
+  .modal p { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
+  .modal input[type=password] {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 5px;
+    color: var(--white);
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    letter-spacing: 4px;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 16px;
+    outline: none;
+  }
+  .modal input[type=password]:focus { border-color: var(--maize); }
+  .modal-btns { display: flex; gap: 10px; justify-content: center; }
+  .modal-error { font-size: 12px; color: #e74c3c; margin-top: -8px; margin-bottom: 10px; min-height: 16px; }
+
+  /* PRINT */
+  @media print {
+    body { background: white; color: black; }
+    .week-nav, .controls { display: none; }
+    .header { background: var(--navy) !important; }
+    .score-input { border: 1px solid #ccc; color: black; background: white; }
+  }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .week-panel { order: -1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="grit-badge">GRIT</div>
+      <div class="title-block">
+        <h1>ROCKIN' <span>GRIT</span> — SUMMER AA CONTEST</h1>
+        <p>Garcia Market &nbsp;•&nbsp; Period 6 &amp; 7 &nbsp;•&nbsp; May 27 – July 28, 2026 &nbsp;•&nbsp; Pursuit · Tackle · Triumph</p>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-pill">12 Stores</div>
+      <div class="meta-pill">9 Weeks</div>
+    </div>
+  </div>
+</div>
+
+<div class="prizes-bar">
+  <div class="prize-item"><div class="prize-rank">1</div> Ann Arbor Trip — Oct 16–18 &nbsp;|&nbsp; OR $500 LY &nbsp;+&nbsp; $500/Mgmt Team</div>
+  <div class="prize-item"><div class="prize-rank">2</div> $300 / Mgmt Team</div>
+  <div class="prize-item"><div class="prize-rank">3</div> $150 / Mgmt Team</div>
+</div>
+
+<div class="main">
+
+  <!-- WEEK NAVIGATION -->
+  <div class="week-nav" id="weekNav"></div>
+
+  <div class="layout">
+    <!-- LEFT: WEEK DETAIL -->
+    <div>
+      <div class="week-panel" id="weekPanel"></div>
+      <div class="week-summary">
+        <div class="ws-header">Market Points by Week</div>
+        <div class="ws-grid" id="wkSummary"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: SCORECARD -->
+    <div>
+      <!-- READ-ONLY NOTICE (public) -->
+      <div class="readonly-notice" id="readonlyNotice">
+        <span class="lock-icon">🔒</span>
+        <span>Live Scorecard &mdash; View Only &nbsp;&middot;&nbsp; Updated by Garcia Market HQ</span>
+        <span class="admin-link" onclick="openAdminModal()">Admin</span>
+      </div>
+
+      <!-- ADMIN CONTROLS (hidden until unlocked) -->
+      <div class="controls" id="adminControls" style="display:none;">
+        <button class="btn btn-primary" onclick="saveData()">💾 Save Scores</button>
+        <button class="btn btn-outline" onclick="window.print()">🖨 Print</button>
+        <button class="btn btn-danger" onclick="clearAll()">&#x1F5D1; Clear All</button>
+        <span class="save-status" id="saveStatus">&#x2713; Saved</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--gray);cursor:pointer;" onclick="lockAdmin()">&#x1F512; Lock</span>
+      </div>
+
+      <!-- ADMIN UNLOCK MODAL -->
+      <div class="modal-overlay" id="adminModal">
+        <div class="modal">
+          <h3>ADMIN ACCESS</h3>
+          <p>Enter the Garcia Market admin PIN to edit scores.</p>
+          <input type="password" id="adminPin" maxlength="10" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;"
+            onkeydown="if(event.key==='Enter') checkPin()">
+          <div class="modal-error" id="pinError"></div>
+          <div class="modal-btns">
+            <button class="btn btn-primary" onclick="checkPin()">Unlock</button>
+            <button class="btn btn-outline" onclick="closeAdminModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div class="scorecard-wrap">
+        <table class="scorecard-table" id="scorecardTable"></table>
+      </div>
+      <div class="leaderboard" id="leaderboard">
+        <div class="lb-header"><span>Live Standings</span><span id="lbSubtitle">Overall Points</span></div>
+        <div class="lb-rows" id="lbRows"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const WEEKS = [
+  {
+    id: 'W1', label: 'W1 — LAUNCH', title: 'Launch Week / MP Cutoff Challenge',
+    max: 2,
+    desc: 'MP completes a cutoff vs. their meat cutter. Post team "We Dominate" picture using #GarciaMarketSummerChallenge.',
+    rules: [
+      { pts: '1 pt', desc: 'Team "We Dominate" picture posted' },
+      { pts: '1 pt', desc: 'MP cutoff completed with score showing' },
+    ]
+  },
+  {
+    id: 'W2', label: 'W2 — GUEST COUNT', title: 'Guest Count Push',
+    max: 8,
+    desc: 'Biggest GC improvement vs. prior year or period. All positive improvement earns. <strong style="color:var(--maize)">🍖 PMIX Item: RIBS.</strong> Goal: increase Ribs PMIX by 15% from your W1 total. Ed will be making Fall off the Bone Ribs at Alley Rally.',
+    rules: [
+      { pts: '5 pts', desc: '5%+ GC improvement vs. prior year or period' },
+      { pts: '4 pts', desc: '4% GC improvement' },
+      { pts: '3 pts', desc: '3% GC improvement' },
+      { pts: '2 pts', desc: '2% GC improvement' },
+      { pts: '1 pt', desc: '1% GC improvement — or any positive' },
+      { pts: '+1 bonus', desc: '🍖 Ribs PMIX increases 15% vs. your W1 Ribs total' },
+      { pts: '+1 bonus', desc: '📊 Submit daily + weekly Rib Yield report' },
+    ]
+  },
+  {
+    id: 'W3', label: 'W3 — TO-GO', title: 'To-Go Takeover',
+    max: 7,
+    desc: 'Best To-Go sales growth and best To-Go team picture. Use #GarciaMarketSummerChallenge.',
+    rules: [
+      { pts: '5/4/3 pts', desc: 'Top 3 To-Go growth (1st/2nd/3rd)' },
+      { pts: '+2 bonus', desc: 'Best team picture' },
+    ]
+  },
+  {
+    id: 'W4', label: 'W4 — LABOR', title: 'Labor and Productivity Week',
+    max: 4,
+    desc: 'Each store submits an action plan on OT, FOH or BOH productivity impact over last 4 weeks. Email to Ed and Support Team.',
+    rules: [
+      { pts: '1 pt', desc: 'Complete action plan submitted' },
+      { pts: '5/4/3 pts', desc: 'Top 3 best action plans' },
+    ]
+  },
+  {
+    id: 'W5', label: 'W5 — PEOPLE', title: 'People Development Week',
+    max: 3,
+    desc: 'Spotlight trainers, promotions, Champs, Eagles, Admin wins & people stories. Post 2 pictures max, send spotlight paragraph to Ed and Support Team.',
+    rules: [
+      { pts: '1 pt', desc: 'People spotlight submission' },
+      { pts: '+2 bonus', desc: 'Best overall spotlight (3 winners earn $50 LY)' },
+    ]
+  },
+  {
+    id: 'W6', label: 'W6 — SHOP', title: 'Shop Week',
+    max: 2,
+    desc: 'Focus on Dining Room and Bar shop execution. First two shops of Period 7 will count.',
+    rules: [
+      { pts: '1 pt', desc: '100 score on both DR shops' },
+      { pts: '1 pt', desc: '100% on Bar shop' },
+    ]
+  },
+  {
+    id: 'W7', label: 'W7 — FOOD COST', title: 'Food Cost & Yields / KM Spotlight',
+    max: 4,
+    desc: 'KM spotlight week. One KM completes a cutoff vs. their meat cutter. Post two Key Hourly Team Pics, Best We Dominate Pic, and Best Silly Pose Pic using #GarciaMarketSummerChallenge.',
+    rules: [
+      { pts: '1 pt', desc: 'KM spotlight submitted' },
+      { pts: '1 pt', desc: 'KM cutoff completed with score' },
+      { pts: '+2 bonus', desc: 'Best KM spotlight' },
+    ]
+  },
+  {
+    id: 'W8', label: 'W8 — GUEST EXP', title: 'Guest Experience Week',
+    max: 8,
+    desc: 'Focus on NPS, BLAST, RAS, dissatisfies, and missing items. Post two MGMT Team Pics, Best We Dominate Pic, and Best Silly Pose Pic using #GarciaMarketSummerChallenge.',
+    rules: [
+      { pts: '5/4/3 pts', desc: 'Top 3 GX improvement' },
+      { pts: '1 pt', desc: 'All positive GX improvement' },
+      { pts: '1 pt each', desc: 'Top 3 of each pose category (We Dominate, Silly Pose)' },
+    ]
+  },
+  {
+    id: 'W9', label: 'W9 — TTI/PPA', title: 'TTI and PPA Push',
+    max: 6,
+    desc: 'Top 3 stores in TTI and top 3 stores in PPA compete for points. A store can earn in both categories.',
+    rules: [
+      { pts: '3/2/1 pts', desc: 'Top 3 TTI (1st/2nd/3rd)' },
+      { pts: '3/2/1 pts', desc: 'Top 3 PPA (1st/2nd/3rd)' },
+    ]
+  },
+];
+
+const STORES = [
+  { id: 'cc', name: 'Coconut Creek', abbr: 'CC' },
+  { id: 'fc', name: 'Florida City', abbr: 'FC' },
+  { id: 'psl', name: 'Port St. Lucie', abbr: 'PSL' },
+  { id: 'wp', name: 'West Palm', abbr: 'WP' },
+  { id: 'wpb', name: 'Boynton Beach', abbr: 'BBch' },
+  { id: 'mm', name: 'Miramar', abbr: 'MIR' },
+  { id: 'mf', name: 'Miami-Flagler', abbr: 'MF' },
+  { id: 'vr', name: 'Viera', abbr: 'VIE' },
+  { id: 'po', name: 'Port Orange', abbr: 'PO' },
+  { id: 'mel', name: 'Melbourne', abbr: 'MEL' },
+  { id: 'wk', name: 'West Kendall', abbr: 'WK' },
+  { id: 'lp', name: 'Lake Park', abbr: 'LP' },
+];
+
+let activeWeek = 0;
+let scores = {};
+
+function loadData() {
+  const saved = localStorage.getItem('grit_summer_aa_2026');
+  if (saved) {
+    try { scores = JSON.parse(saved); } catch(e) { scores = {}; }
+  }
+}
+
+function saveData() {
+  localStorage.setItem('grit_summer_aa_2026', JSON.stringify(scores));
+  const el = document.getElementById('saveStatus');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function clearAll() {
+  if (!confirm('Clear all scores? This cannot be undone.')) return;
+  scores = {};
+  localStorage.removeItem('grit_summer_aa_2026');
+  buildTable();
+  updateLeaderboard();
+  updateWeekSummary();
+  updateWeekNav();
+}
+
+function getScore(storeId, weekIdx) {
+  return scores[storeId + '_' + weekIdx] ?? '';
+}
+
+function setScore(storeId, weekIdx, val) {
+  const key = storeId + '_' + weekIdx;
+  const max = WEEKS[weekIdx].max;
+  let n = parseFloat(val);
+  if (isNaN(n) || val === '') { delete scores[key]; return ''; }
+  if (n < 0) n = 0;
+  if (n > max) n = max;
+  scores[key] = n;
+  return n;
+}
+
+function getTotal(storeId) {
+  let t = 0;
+  WEEKS.forEach((_, i) => { const s = scores[storeId + '_' + i]; if (s !== undefined) t += s; });
+  return t;
+}
+
+function hasWeekData(weekIdx) {
+  return STORES.some(s => scores[s.id + '_' + weekIdx] !== undefined);
+}
+
+function buildWeekNav() {
+  const nav = document.getElementById('weekNav');
+  nav.innerHTML = WEEKS.map((w, i) => `
+    <button class="week-btn ${i === activeWeek ? 'active' : ''} ${hasWeekData(i) ? 'has-data' : ''}"
+      onclick="setWeek(${i})">${w.label}</button>
+  `).join('');
+}
+
+function updateWeekNav() {
+  document.querySelectorAll('.week-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === activeWeek);
+    btn.classList.toggle('has-data', hasWeekData(i));
+  });
+}
+
+function buildWeekPanel() {
+  const w = WEEKS[activeWeek];
+  document.getElementById('weekPanel').innerHTML = `
+    <div class="week-panel-header">
+      <div>
+        <div class="wk-label">${w.id} of 9</div>
+        <div class="wk-title">${w.title}</div>
+      </div>
+      <div class="wk-max">MAX ${w.max} PTS</div>
+    </div>
+    <div class="week-desc">${w.desc}</div>
+    <div class="week-scoring">
+      <div class="scoring-title">Scoring</div>
+      ${w.rules.map(r => `<div class="score-rule"><span class="pts">${r.pts}</span><span>${r.desc}</span></div>`).join('')}
+    </div>
+  `;
+}
+
+function buildTable() {
+  const table = document.getElementById('scorecardTable');
+  // Header
+  let head = `<thead><tr>
+    <th>Store</th>
+    <th class="rank-col">Rank</th>
+    ${WEEKS.map((w, i) => `<th class="${i === activeWeek ? 'active-week' : ''}">${w.id}<br><span style="font-size:9px;opacity:0.6;font-weight:400">/${w.max}</span></th>`).join('')}
+    <th class="total-col">TOTAL</th>
+  </tr></thead>`;
+
+  // Sort stores by total descending for rank
+  const ranked = [...STORES].sort((a, b) => getTotal(b.id) - getTotal(a.id));
+
+  let rows = STORES.map(store => {
+    const rank = ranked.findIndex(r => r.id === store.id) + 1;
+    const rankClass = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : 'other';
+    const rowRankClass = rank <= 3 ? `rank-${rank}` : '';
+    const total = getTotal(store.id);
+
+    const cells = WEEKS.map((w, i) => {
+      const val = getScore(store.id, i);
+      const isActive = i === activeWeek;
+      return `<td class="score-cell">
+        <input type="number" class="score-input ${isActive ? 'active-week' : ''}"
+          value="${val}"
+          min="0" max="${w.max}" step="0.5"
+          data-store="${store.id}" data-week="${i}"
+          oninput="handleInput(this)"
+          onchange="handleChange(this)"
+          title="${w.title} (max ${w.max})"
+        >
+      </td>`;
+    }).join('');
+
+    return `<tr class="${rowRankClass}">
+      <td>
+        <div class="store-name">${store.name}</div>
+        <div class="store-sub">${store.abbr}</div>
+      </td>
+      <td><span class="rank-badge ${rankClass}">${total > 0 ? rank : '—'}</span></td>
+      ${cells}
+      <td class="total-cell" id="total_${store.id}">${total || '—'}</td>
+    </tr>`;
+  }).join('');
+
+  table.innerHTML = head + `<tbody>${rows}</tbody>`;
+}
+
+function handleInput(input) {
+  const storeId = input.dataset.store;
+  const weekIdx = parseInt(input.dataset.week);
+  const val = setScore(storeId, weekIdx, input.value);
+  if (val !== '' && val !== input.value) input.value = val;
+  updateTotals();
+  updateLeaderboard();
+  updateWeekSummary();
+  updateWeekNav();
+}
+
+function handleChange(input) {
+  handleInput(input);
+  saveData();
+}
+
+function updateTotals() {
+  STORES.forEach(store => {
+    const el = document.getElementById('total_' + store.id);
+    if (el) {
+      const t = getTotal(store.id);
+      el.textContent = t > 0 ? t : '—';
+    }
+  });
+  // Update rank badges
+  const ranked = [...STORES].sort((a, b) => getTotal(b.id) - getTotal(a.id));
+  STORES.forEach(store => {
+    const rank = ranked.findIndex(r => r.id === store.id) + 1;
+    const total = getTotal(store.id);
+    const rows = document.querySelectorAll(`[data-store="${store.id}"]`);
+    if (rows.length) {
+      const row = rows[0].closest('tr');
+      const badge = row?.querySelector('.rank-badge');
+      if (badge) {
+        badge.className = 'rank-badge ' + (rank===1?'r1':rank===2?'r2':rank===3?'r3':'other');
+        badge.textContent = total > 0 ? rank : '—';
+      }
+      row?.classList.remove('rank-1','rank-2','rank-3');
+      if (total > 0 && rank <= 3) row?.classList.add('rank-' + rank);
+    }
+  });
+}
+
+function updateLeaderboard() {
+  const ranked = [...STORES]
+    .map(s => ({ ...s, total: getTotal(s.id) }))
+    .sort((a, b) => b.total - a.total);
+  const maxTotal = ranked[0]?.total || 1;
+
+  const colors = ['#FFCB05','#c9a003','#a07800','rgba(255,203,5,0.5)'];
+  document.getElementById('lbRows').innerHTML = ranked.map((s, i) => {
+    const pct = maxTotal > 0 ? Math.max((s.total / maxTotal) * 100, s.total > 0 ? 4 : 0) : 0;
+    const color = colors[Math.min(i, colors.length - 1)];
+    return `<div class="lb-row">
+      <div class="lb-store">${s.name}</div>
+      <div class="lb-bar-wrap">
+        <div class="lb-bar" style="width:${pct}%; background:${color};">${s.total > 0 ? s.total : ''}</div>
+      </div>
+      <div class="lb-total">${s.total || '—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function updateWeekSummary() {
+  const grid = document.getElementById('wkSummary');
+  grid.innerHTML = WEEKS.map((w, i) => {
+    const total = STORES.reduce((sum, s) => {
+      const sc = scores[s.id + '_' + i];
+      return sum + (sc !== undefined ? sc : 0);
+    }, 0);
+    const isActive = i === activeWeek;
+    return `<div class="ws-cell ${isActive ? 'active-wk' : ''}">
+      <span class="wk">${w.id}</span>
+      <span class="pts-sum">${total > 0 ? total : '—'}</span>
+    </div>`;
+  }).join('');
+}
+
+function setWeek(i) {
+  activeWeek = i;
+  buildWeekPanel();
+  buildWeekNav();
+  buildTable();
+  updateLeaderboard();
+  updateWeekSummary();
+}
+
+// ── ADMIN PIN LOGIC ───────────────────────────────────────────────────────
+const ADMIN_PIN = 'GRIT26'; // Change this to your preferred PIN
+let isAdmin = false;
+
+function openAdminModal() {
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminPin').value = '';
+  document.getElementById('pinError').textContent = '';
+  setTimeout(() => document.getElementById('adminPin').focus(), 100);
+}
+
+function closeAdminModal() {
+  document.getElementById('adminModal').classList.remove('open');
+}
+
+function checkPin() {
+  const entered = document.getElementById('adminPin').value.trim().toUpperCase();
+  if (entered === ADMIN_PIN) {
+    isAdmin = true;
+    closeAdminModal();
+    document.getElementById('readonlyNotice').style.display = 'none';
+    document.getElementById('adminControls').style.display = 'flex';
+    setInputsEditable(true);
+  } else {
+    document.getElementById('pinError').textContent = 'Incorrect PIN — try again.';
+    document.getElementById('adminPin').value = '';
+    document.getElementById('adminPin').focus();
+  }
+}
+
+function lockAdmin() {
+  isAdmin = false;
+  document.getElementById('readonlyNotice').style.display = 'flex';
+  document.getElementById('adminControls').style.display = 'none';
+  setInputsEditable(false);
+}
+
+function setInputsEditable(editable) {
+  document.querySelectorAll('.score-input').forEach(inp => {
+    inp.disabled = !editable;
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+function init() {
+  loadData();
+  buildWeekNav();
+  buildWeekPanel();
+  buildTable();
+  updateLeaderboard();
+  updateWeekSummary();
+  // Start in read-only mode — inputs disabled until admin unlocks
+  setInputsEditable(false);
+}
+
+init();
+</script>
+</body>
+</html>
