@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garcia Market — Facility Walkthrough Checklist</title>
+<style>
+  :root {
+    --navy: #00274C;
+    --maize: #FFCB05;
+    --navy-light: #003566;
+    --maize-soft: #FFF3B0;
+    --white: #ffffff;
+    --gray-100: #f5f6f8;
+    --gray-200: #e8eaed;
+    --gray-500: #6b7280;
+    --red: #dc2626;
+    --green: #16a34a;
+    --text: #111827;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--gray-100);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 28px 40px 22px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 5px solid var(--maize);
+  }
+  .header-left h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .header-left h1 span { color: var(--maize); }
+  .header-left p {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #aec6e8;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 12px;
+    color: #aec6e8;
+  }
+  .header-right strong { color: var(--maize); font-size: 14px; display: block; margin-bottom: 2px; }
+
+  /* SUMMARY BANNER */
+  .summary-bar {
+    background: var(--maize);
+    color: var(--navy);
+    padding: 12px 40px;
+    display: flex;
+    gap: 32px;
+    font-size: 13px;
+    font-weight: 600;
+    flex-wrap: wrap;
+  }
+  .summary-bar span { display: flex; align-items: center; gap: 6px; }
+
+  /* CONTROLS */
+  .controls {
+    padding: 16px 40px;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .controls label { font-size: 13px; color: var(--gray-500); font-weight: 500; }
+  .filter-btn {
+    padding: 6px 14px;
+    border: 2px solid var(--gray-200);
+    border-radius: 20px;
+    background: var(--white);
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .filter-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .filter-btn.fire { border-color: var(--red); color: var(--red); }
+  .filter-btn.fire.active { background: var(--red); color: white; }
+
+  /* MAIN LAYOUT */
+  .main { padding: 28px 40px; max-width: 1200px; }
+
+  /* STORE CARD */
+  .store-card {
+    background: var(--white);
+    border-radius: 10px;
+    margin-bottom: 28px;
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .store-header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+  .store-header:hover { background: var(--navy-light); }
+  .store-title {
+    font-size: 17px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .store-num {
+    background: var(--maize);
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+  .store-meta {
+    display: flex;
+    gap: 14px;
+    font-size: 12px;
+    color: #aec6e8;
+    align-items: center;
+  }
+  .badge-count {
+    background: rgba(255,255,255,0.15);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .badge-fire {
+    background: var(--red);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .chevron { font-size: 12px; transition: transform 0.2s; }
+  .collapsed .chevron { transform: rotate(-90deg); }
+
+  .store-body { padding: 0; }
+
+  /* SECTIONS */
+  .section-label {
+    padding: 10px 20px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    background: var(--gray-100);
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label.capex { color: var(--navy); }
+  .section-label .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--maize);
+    display: inline-block;
+  }
+  .section-label.capex .dot { background: var(--navy); }
+
+  /* CHECKLIST ITEMS */
+  .checklist { list-style: none; padding: 6px 0 10px; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 20px;
+    border-bottom: 1px solid var(--gray-200);
+    transition: background 0.1s;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li:hover { background: var(--gray-100); }
+  .checklist li.done { opacity: 0.5; }
+  .checklist li.done .item-text { text-decoration: line-through; }
+
+  .checklist li.urgent { border-left: 3px solid var(--red); }
+  .checklist li.question { border-left: 3px solid #f59e0b; }
+
+  input[type="checkbox"] {
+    margin-top: 2px;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    accent-color: var(--navy);
+    cursor: pointer;
+  }
+
+  .item-text { font-size: 14px; flex: 1; }
+
+  .tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+    letter-spacing: 0.4px;
+  }
+  .tag-fire { background: #fde8e8; color: var(--red); }
+  .tag-question { background: #fef3c7; color: #92400e; }
+  .tag-capex { background: #dbeafe; color: #1e40af; }
+  .tag-urgent { background: #fde8e8; color: var(--red); }
+
+  /* OVERALL NOTES */
+  .overall-notes {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    border-left: 5px solid var(--maize);
+  }
+  .overall-notes h2 {
+    color: var(--maize);
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+  .overall-notes p {
+    font-size: 14px;
+    color: #d0dff0;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .overall-notes p:last-child { margin-bottom: 0; }
+  .overall-notes strong { color: var(--maize); }
+
+  /* PROGRESS */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    height: 6px;
+    margin-top: 6px;
+    overflow: hidden;
+    flex: 1;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--maize);
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+  .progress-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: #aec6e8;
+    padding: 0 20px 12px;
+  }
+  .progress-pct { font-weight: 700; color: var(--maize); min-width: 30px; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: var(--gray-500);
+    border-top: 1px solid var(--gray-200);
+    margin-top: 12px;
+  }
+  footer strong { color: var(--navy); }
+
+  @media (max-width: 640px) {
+    header, .summary-bar, .controls, .main { padding-left: 16px; padding-right: 16px; }
+    .store-meta { display: none; }
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Garcia Market <span>Facility Walkthrough</span></h1>
+    <p>12-Store Regional Review &nbsp;·&nbsp; General Notes &amp; 2027 CAPEX</p>
+  </div>
+  <div class="header-right">
+    <strong>Ed Garcia — Market Partner</strong>
+    Garcia Market · Florida East Coast
+  </div>
+</header>
+
+<div class="summary-bar" id="summaryBar">
+  <span>🏪 <span id="storeCount">12</span> Stores</span>
+  <span>✅ <span id="totalItems">0</span> Action Items</span>
+  <span>🔥 <span id="fireCount">0</span> Fire Hazards / Urgent</span>
+  <span>❓ <span id="qCount">0</span> Open Questions</span>
+  <span>🏗️ <span id="capexCount">0</span> CAPEX Projects</span>
+</div>
+
+<div class="controls">
+  <label>Filter:</label>
+  <button class="filter-btn active" onclick="setFilter('all', this)">All Items</button>
+  <button class="filter-btn fire" onclick="setFilter('urgent', this)">🔥 Urgent Only</button>
+  <button class="filter-btn" onclick="setFilter('question', this)">❓ Open Questions</button>
+  <button class="filter-btn" onclick="setFilter('capex', this)">🏗️ CAPEX Only</button>
+  <button class="filter-btn" style="margin-left:auto;" onclick="expandAll()">Expand All</button>
+  <button class="filter-btn" onclick="collapseAll()">Collapse All</button>
+</div>
+
+<div class="main" id="main">
+
+<!-- ===================== STORES ===================== -->
+
+<div class="store-card" id="card-561">
+  <div class="store-header" onclick="toggleCard('561')">
+    <div class="store-title"><span class="store-num">#561</span> Florida City</div>
+    <div class="store-meta">
+      <span class="badge-count" id="prog-561">7 general · 6 CAPEX</span>
+      <span class="badge-fire">🔥 URGENT</span>
+      <span class="chevron">▼</span>
+    </div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-561">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-561" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Pressure wash and paint exterior — confirm local provider or line up Ed's vendor</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace non-working lights in riser room — install 4-ft LED strip lights from Home Depot</div></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Remove all debris and sharp objects from rooftop membrane and clean membrane — grease buildup</div><span class="tag tag-urgent">URGENT</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace latches and seals on all exhaust hood units</div></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">To-Go window install — add now or next year? (Vendor has done 4 of these already)</div><span class="tag tag-question">DECISION</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Front doors and rear storage doors — on order; line up installation when they ship</div></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Reduce or remove host stand — confirm approval (MP reportedly on board)</div><span class="tag tag-question">APPROVAL</span></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Upgrade all kitchen lights to flat panel LED and clean up ceiling grid</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Possible roof replacement pending condition assessment</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Interior tin and skin w/ full furniture (2027 or 2028 TBD)</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Install FOH ceiling insulation foam and repaint</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Exterior lighting and signage upgrade</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Bar top replacement with POS station; add hot water faucet</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Restroom refresh — sinks, ceiling grid, mirrors, cabinets, partitions (TBD)</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-628">
+  <div class="store-header" onclick="toggleCard('628')">
+    <div class="store-title"><span class="store-num">#628</span> West Kendall</div>
+    <div class="store-meta"><span class="badge-count">6 general · 1 CAPEX</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-628">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-628" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Water heater covers removed — confirm units are working, any parts on order? Replace covers to protect electronics.</div><span class="tag tag-question">VERIFY</span></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean heavily grease-caked baffles over grill/broil area</div><span class="tag tag-urgent">URGENT</span></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Properly clean rooftop exhaust hoods — massive buildup in cage area and tunnel</div><span class="tag tag-urgent">URGENT</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Install LED light strips in To-Go area for better visibility</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">HVAC units in good shape overall — continue PM monitoring</div></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Exterior shutters — approved to order and install new ones? Existing wooden units are in poor condition.</div><span class="tag tag-question">APPROVAL</span></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Possible double push on push line</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-480">
+  <div class="store-header" onclick="toggleCard('480')">
+    <div class="store-title"><span class="store-num">#480</span> Miami / Flagler</div>
+    <div class="store-meta"><span class="badge-count">9 general · 6 CAPEX</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-480">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-480" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Install LED light strips in To-Go area for better visibility</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean out doghouses and remove all trash and debris</div></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Rotate and clean hood baffles per process — currently very dirty</div><span class="tag tag-urgent">URGENT</span></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Go through all rooftop exhaust fans — replace latches, bolts, seals; clean stack chamber</div><span class="tag tag-urgent">URGENT</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Silikal repairs needed — send floor plan marked up this week</div></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Water heaters — how old are they and are they performing well?</div><span class="tag tag-question">VERIFY</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Water softener was in bypass — placed back in service; investigate root cause</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Address damage behind dish sink</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace damaged/worn seat covers</div></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Bar top replacement and add hot water faucet</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Paint exterior and replace shutters</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Exterior signage and lighting replacement</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace HVAC units #4 and #5</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Full interior tin and skin</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Upgrade all kitchen lights to flat panel LED and clean up ceiling grid</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-455">
+  <div class="store-header" onclick="toggleCard('455')">
+    <div class="store-title"><span class="store-num">#455</span> Miramar</div>
+    <div class="store-meta"><span class="badge-count">15 general · 6 CAPEX</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-455">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-455" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace belt on dish exhaust</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean out and tighten HVAC condensation lines</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean doghouses and confirm exhaust fan spare parts kit is on hand</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Secure electrical sign box on rooftop</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">HVAC in good shape — continue PM monitoring</div></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean rooftop exhaust hoods and rooftop membrane</div><span class="tag tag-urgent">URGENT</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Silikal repairs on cook line — send floor plan to location for review</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Get gutters installed — Brian to contact Paul Dupree</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Seal sidewalk along building to prevent lizard entry</div></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Trailer out back — what is the plan for this?</div><span class="tag tag-question">DECISION</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace worn/damaged seat cushions</div></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean and rotate hood baffles on line — currently caked with grease</div><span class="tag tag-urgent">URGENT</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Reseat loose baffles — grease building up due to poor seating; order backup baffle set</div></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Are PM's being executed on the water heaters?</div><span class="tag tag-question">VERIFY</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace catch chain on CO2 tank</div></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">To-Go window in pick-up area — this year or next? (Decision needed)</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Pressure wash, paint exterior, replace shutters</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace dumpster gates — rusted, aged condition</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace front entry doors and frame</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Install stainless steel on entire cooler and freezers</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Restroom remodel — all items except tile</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-587">
+  <div class="store-header" onclick="toggleCard('587')">
+    <div class="store-title"><span class="store-num">#587</span> Coconut Creek</div>
+    <div class="store-meta"><span class="badge-count">9 general · 4 CAPEX</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-587">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-587" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace belt on dish exhaust</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Remove all condensation lines on rooftop RTU units</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean rooftop membrane and remove all screws and sharp objects</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean out doghouses and remove salt bags</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Order complete emergency parts kits for exhaust</div></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Properly clean rooftop exhaust hoods — replace latches and seals where needed</div><span class="tag tag-urgent">URGENT</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Get all ducts cleaned — Stanley Steamers</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Have hedges dropped 1–2 feet around building</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Pressure wash all sidewalks</div></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace rooftop membrane — current condition warrants replacement</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Cooler bump out</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Kitchen LED flat panel light conversion</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Delete host stand</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-542">
+  <div class="store-header" onclick="toggleCard('542')">
+    <div class="store-title"><span class="store-num">#542</span> Boynton Beach</div>
+    <div class="store-meta"><span class="badge-count">8 general · 1 CAPEX</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-542">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-542" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Remove all condensation lines on rooftop RTU units</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Remove all sharp objects and debris from rooftop membrane</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Chemically clean RTU coils — significant grease buildup</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Install LED lights in To-Go area for better visibility</div></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Tighten and clean loose baffles on cook line — severe grease buildup</div><span class="tag tag-urgent">URGENT</span></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Severe ice buildup on freezer evap unit — get inspected and repaired</div><span class="tag tag-urgent">URGENT</span></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">To-Go window — add this year or next year?</div><span class="tag tag-question">DECISION</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Remove weeds from planters (especially rear), trim trees</div></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Kitchen LED flat panel light conversion</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-520">
+  <div class="store-header" onclick="toggleCard('520')">
+    <div class="store-title"><span class="store-num">#520</span> West Palm Beach</div>
+    <div class="store-meta"><span class="badge-count">10 general · 4 CAPEX</span><span class="badge-fire">🔥 URGENT</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-520">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-520" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Dish exhaust fan was non-functional on arrival — got running, monitor closely for failure</div><span class="tag tag-urgent">WATCH</span></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Rooftop exhaust fans heavily caked with grease — clean IMMEDIATELY</div><span class="tag tag-urgent">URGENT</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Rooftop exhaust hoods — secure stacks and replace seals</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean rooftop membrane — grease buildup</div></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Freezer has heavy ice buildup — address immediately</div><span class="tag tag-urgent">URGENT</span></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Missing landscaping on entry side — is this slated for exterior seating?</div><span class="tag tag-question">DECISION</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Install LED light strips in To-Go area</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Get Federal Heath out — secure exterior lights that are falling off</div></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Hood baffles caked with grease — clean and order spare baffles</div><span class="tag tag-urgent">URGENT</span></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Water heaters leaking heavily — confirm this is being addressed</div><span class="tag tag-urgent">URGENT</span></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Install LED flat panel light fixtures in kitchen</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">FOH Silikal floor install</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Pressure wash, paint exterior, replace 8 shutters</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Cooler bump out</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-827">
+  <div class="store-header" onclick="toggleCard('827')">
+    <div class="store-title"><span class="store-num">#827</span> Lake Park</div>
+    <div class="store-meta"><span class="badge-count">5 general · no CAPEX planned</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-827">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-827" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean baffles per process — grease buildup; order spare baffles</div><span class="tag tag-urgent">URGENT</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">P-traps on RTU units were disconnected — secure and tighten</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean split unit AC monthly — severe dust buildup currently</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace belt on dish exhaust</div></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Do we have spare parts kit on hand for exhaust fans?</div><span class="tag tag-question">VERIFY</span></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text" style="color:var(--gray-500); font-style:italic;">No projects planned for 2027</div></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-639">
+  <div class="store-header" onclick="toggleCard('639')">
+    <div class="store-title"><span class="store-num">#639</span> Port St. Lucie</div>
+    <div class="store-meta"><span class="badge-count">6 general · 3 CAPEX</span><span class="badge-fire">🔥 FIRE HAZARD</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-639">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-639" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace 8 shutters — wood rot, falling apart</div></li>
+      <li class="question"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Exterior lights on at 8:30 AM and not shutting off — get electrician involved if needed</div><span class="tag tag-question">VERIFY</span></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Rooftop exhaust hoods heavily covered in grease in cage area — FIRE HAZARD</div><span class="tag tag-fire">🔥 FIRE HAZARD</span></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Baffles over broil heavily caked — clean per process immediately, order spare baffles</div><span class="tag tag-urgent">URGENT</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace wax rings on all toilets and resecure to the ground</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Review Dip It cleaning process for urinals with team</div></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Kitchen LED flat panel light installation</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">FOH Silikal flooring installation</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Parking lot asphalt repairs — Brian checking with Duane Banet re: property owner obligation</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-10">
+  <div class="store-header" onclick="toggleCard('10')">
+    <div class="store-title"><span class="store-num">#10</span> Melbourne</div>
+    <div class="store-meta"><span class="badge-count">4 general · 3 CAPEX</span><span class="badge-fire">🔥 FIRE HAZARD</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-10">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-10" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Remove salt buildup from front entry doors — consider painting doors as well</div></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Heavy grease on broil side baffles — order spares and implement nightly swap-out rotation</div><span class="tag tag-urgent">URGENT</span></li>
+      <li class="urgent"><input type="checkbox" onchange="updateProgress()"><div class="item-text">Rooftop exhaust hoods heavily covered in grease in stack chamber — FIRE HAZARD. Recommend removing Auto-Mist system due to ongoing issues and fire risk.</div><span class="tag tag-fire">🔥 FIRE HAZARD</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Tighten all loose toilet seats</div></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Exterior stucco repairs, pressure wash and full paint — replace all shutters with composite units (wooden shutters are failing)</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Kitchen LED flat panel light installation</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Modifications to To-Go area</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-681">
+  <div class="store-header" onclick="toggleCard('681')">
+    <div class="store-title"><span class="store-num">#681</span> Viera</div>
+    <div class="store-meta"><span class="badge-count">4 general · 2 CAPEX</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-681">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-681" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Tighten and secure P-traps on HVAC units — remove all condensation lines after P-trap</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Clean exhaust baffles per process — grease buildup present</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Order spare set of baffles to improve rotation and reduce grease buildup</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Jordan — move forward as Facility Manager Mentor candidate (great conversation noted)</div></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace bar top and add POS station</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">FOH Silikal flooring — request from Managing Partner</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="store-card" id="card-387">
+  <div class="store-header" onclick="toggleCard('387')">
+    <div class="store-title"><span class="store-num">#387</span> Port Orange</div>
+    <div class="store-meta"><span class="badge-count">5 general · 2 CAPEX</span><span class="chevron">▼</span></div>
+  </div>
+  <div class="store-body">
+    <div class="progress-line"><span class="progress-pct" id="pct-387">0%</span><div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-387" style="width:0%"></div></div><span>completed</span></div>
+    <div class="section-label"><span class="dot"></span> General Notes</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace dead shrubs in new outside waiting area (by green electrical box)</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Confirm dumpster has been removed from parking lot</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Rooftop cleaned up — leftover parts and screws removed ✓</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Replace any missing or damaged seals and latches on rooftop exhaust hoods</div></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Install LED light fixtures in To-Go room for team member visibility</div></li>
+    </ul>
+    <div class="section-label capex"><span class="dot"></span> 2027 CAPEX Suggestions</div>
+    <ul class="checklist">
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Overall kitchen improvement — equipment, tables, pass-through area, drink station. Work with Seal Tech to design and install.</div><span class="tag tag-capex">CAPEX</span></li>
+      <li><input type="checkbox" onchange="updateProgress()"><div class="item-text">Install diamond plate or stainless steel on all coolers/freezers; add 3 door covers on cooler entry doors</div><span class="tag tag-capex">CAPEX</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- OVERALL NOTES -->
+<div class="overall-notes">
+  <h2>📋 Regional Takeaways — Ed Garcia</h2>
+  <p><strong>Big Win:</strong> This was a productive week across all 12 locations — great conversations with everyone.</p>
+  <p><strong>🔥 #1 Issue — Hood &amp; Exhaust Systems:</strong> Most locations have severe grease buildup in stack chambers because hood cleaners are not servicing these areas. We must follow up every month during service and physically get on the roof to verify their execution.</p>
+  <p><strong>📅 #2 Issue — Preventative Maintenance Ownership:</strong> Every location needs someone who owns the PM calendar. HVAC to plumbing — all tasks must be completed correctly. This will be a key focus for the Mentor Program.</p>
+  <p><strong>🔧 Paul Dupree Available:</strong> Trusted contractor with 10+ years working relationship. Finishing up in the panhandle this week and available going forward. Can handle any repairs or replacements inside and outside — very detail-oriented, significantly more cost-effective than most vendors. If you want him to run through your location on any project, reach out to Ed with the location and project details.</p>
+</div>
+
+</div><!-- /main -->
+
+<footer>
+  Garcia Market · Ed Garcia, Market Partner &nbsp;·&nbsp; <strong>GRIT</strong> — Pursuit · Tackle · Triumph
+</footer>
+
+<script>
+  function toggleCard(id) {
+    const card = document.getElementById('card-' + id);
+    const body = card.querySelector('.store-body');
+    const header = card.querySelector('.store-header');
+    if (body.style.display === 'none') {
+      body.style.display = '';
+      header.classList.remove('collapsed');
+    } else {
+      body.style.display = 'none';
+      header.classList.add('collapsed');
+    }
+  }
+
+  function expandAll() {
+    document.querySelectorAll('.store-body').forEach(b => b.style.display = '');
+    document.querySelectorAll('.store-header').forEach(h => h.classList.remove('collapsed'));
+  }
+
+  function collapseAll() {
+    document.querySelectorAll('.store-body').forEach(b => b.style.display = 'none');
+    document.querySelectorAll('.store-header').forEach(h => h.classList.add('collapsed'));
+  }
+
+  function setFilter(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.checklist li').forEach(li => {
+      if (type === 'all') { li.style.display = ''; return; }
+      if (type === 'urgent') { li.style.display = li.classList.contains('urgent') ? '' : 'none'; return; }
+      if (type === 'question') { li.style.display = li.classList.contains('question') ? '' : 'none'; return; }
+      if (type === 'capex') {
+        const hasCapex = li.querySelector('.tag-capex');
+        li.style.display = hasCapex ? '' : 'none';
+      }
+    });
+
+    // expand all cards when filtering
+    if (type !== 'all') expandAll();
+  }
+
+  function updateProgress() {
+    const cards = document.querySelectorAll('.store-card');
+    let totalItems = 0, totalDone = 0;
+
+    cards.forEach(card => {
+      const id = card.id.replace('card-', '');
+      const boxes = card.querySelectorAll('input[type="checkbox"]');
+      const done = card.querySelectorAll('input[type="checkbox"]:checked');
+      const total = boxes.length;
+      const doneCount = done.length;
+      const pct = total > 0 ? Math.round(doneCount / total * 100) : 0;
+
+      const pctEl = document.getElementById('pct-' + id);
+      const barEl = document.getElementById('bar-' + id);
+      if (pctEl) pctEl.textContent = pct + '%';
+      if (barEl) barEl.style.width = pct + '%';
+
+      totalItems += total;
+      totalDone += doneCount;
+    });
+
+    document.getElementById('totalItems').textContent = totalItems;
+  }
+
+  // Count summary stats on load
+  window.addEventListener('load', () => {
+    const urgent = document.querySelectorAll('.tag-fire, .tag-urgent').length;
+    const questions = document.querySelectorAll('.tag-question').length;
+    const capex = document.querySelectorAll('.tag-capex').length;
+    const total = document.querySelectorAll('.checklist li').length;
+
+    document.getElementById('totalItems').textContent = total;
+    document.getElementById('fireCount').textContent = urgent;
+    document.getElementById('qCount').textContent = questions;
+    document.getElementById('capexCount').textContent = capex;
+  });
+</script>
+
+</body>
+</html>
